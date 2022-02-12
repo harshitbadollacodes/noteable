@@ -8,7 +8,7 @@ export function NoteCard() {
     return (
         <ul className="flex flex-wrap w-full">
             
-            {notes.map(note => (
+            {notes && notes.map(note => (
                 <li 
                     key={note._id}
                     className={`${note.bgColor} w-full md:w-[47%] m-2`}
