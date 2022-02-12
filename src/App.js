@@ -4,6 +4,7 @@ import { EditNote } from "./features/note/EditNote";
 import { Note } from "./features/note/Note";
 import { Login } from "./features/user/Login";
 import { Signup } from "./features/user/Signup";
+import { PrivateRoute } from "./Utils/PrivateRoute";
 
 function App() {
 
@@ -12,10 +13,28 @@ function App() {
             <Navbar/>
             
             <Routes>
-                <Route path="/" element={<Note/>} />
-                <Route path="/note/:noteId" element={<EditNote/>} />
+                <Route 
+                    path="/" 
+                    element={ 
+                        <PrivateRoute>
+                            <Note/> 
+                        </PrivateRoute>
+                    } 
+                />
+
+                <Route 
+                    path="/note/:noteId" 
+
+                    element={ 
+                        <PrivateRoute>
+                            <EditNote/>
+                        </PrivateRoute>
+                    } 
+                />
+
                 <Route path="/login" element={<Login/>} />
                 <Route path="/signup" element={<Signup/>} />
+
             </Routes>
 
         </div>
