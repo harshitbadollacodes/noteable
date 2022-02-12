@@ -1,4 +1,4 @@
-export const API = "https://quiet-shore-84597.herokuapp.com"
+export const API = "https://shielded-brushlands-58781.herokuapp.com"
 
 // "http://localhost:5000"
 
