@@ -8,10 +8,6 @@ import { addNote } from "./noteSlice"
 export function Note() {
 
     const { token } = useSelector(state => state.user);
-
-    const { status } = useSelector(state => state.notes);
-
-    console.log(status);
     
     const [form, setForm] = useState(false);
 
