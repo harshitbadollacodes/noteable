@@ -12,7 +12,6 @@ export const getAllNotes = createAsyncThunk(
             }
         );
 
-        console.log(response.data);
         return response.data;
     }
 );

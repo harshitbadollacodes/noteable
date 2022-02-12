@@ -13,7 +13,7 @@ export function NoteCard() {
                     key={note._id}
                     className={`${note.bgColor} w-full md:w-[47%] m-2`}
                 >
-                    <Link onClick={() => console.log("clicked")} to={`note/${note._id}`}>
+                    <Link to={`note/${note._id}`}>
                         <div
                             className={`p-4 w-full`}
                         >
