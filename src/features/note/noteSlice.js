@@ -114,9 +114,19 @@ export const noteSlice = createSlice({
             state.notes = action.payload.allNotes.notes
         },
 
-        [deleteNote.fulfilled]: (state, action) => {
-            state.notes = action.payload.allNotes.notes
+        [editNote.rejected]: (state, action) => {
+            state.status = "error";
+            state.error = action.error.message
         },
+
+        [deleteNote.fulfilled]: (state, action) => {
+            state.notes = action.payload.allNotes.notes;
+        },
+
+        [deleteNote.rejected]: (state, action) => {
+            state.status = "error";
+            state.error = action.error.message;
+        }
 
     }
 });

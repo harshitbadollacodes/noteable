@@ -8,6 +8,10 @@ import { addNote } from "./noteSlice"
 export function Note() {
 
     const { token } = useSelector(state => state.user);
+    const { notes } = useSelector(state => state.notes);
+
+    const pinnedNotes = notes.filter(note => note.isPinned);
+    const unpinnedNotes = notes.filter(note => !note.isPinned);
     
     const [form, setForm] = useState(false);
 
@@ -145,10 +149,20 @@ export function Note() {
                 </div>
             }
 
+            <div className="w-full">
+                <h1 className="font-bold text-2xl">Pinned Notes</h1>
+                    <NoteCard notes={pinnedNotes} />
+            </div>
 
-            <h1 className="font-bold text-2xl">All Notes</h1>
+            <div className="w-full">
+                <h1 className="font-bold text-2xl">Other Notes</h1>
+                <NoteCard notes={unpinnedNotes}/>
+            </div>
+
             
-            <NoteCard/>
+            
+            
+
 
         </div>
     );

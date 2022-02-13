@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteNote } from "./noteSlice";
 
-export function NoteCard() {
+export function NoteCard({notes}) {
 
     const { token } = useSelector(state => state.user);
-    const { notes } = useSelector(state => state.notes);
 
     const dispatch = useDispatch();
 
