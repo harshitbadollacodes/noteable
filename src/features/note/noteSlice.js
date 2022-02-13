@@ -53,8 +53,20 @@ export const editNote = createAsyncThunk(
 
         return response.data;
     }
-)
+);
 
+export const deleteNote = createAsyncThunk(
+    "note/deleteNote",
+    async ({token, noteId}) => {
+        const response = await axios.delete(`${API}/notes/delete/${noteId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+    }
+);
 
 export const noteSlice = createSlice({
     name: "note",
@@ -100,7 +112,11 @@ export const noteSlice = createSlice({
         [editNote.fulfilled]: (state, action) => {
             state.status = "fulfilled";
             state.notes = action.payload.allNotes.notes
-        }
+        },
+
+        [deleteNote.fulfilled]: (state, action) => {
+            state.notes = action.payload.allNotes.notes
+        },
 
     }
 });

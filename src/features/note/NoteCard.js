@@ -1,9 +1,18 @@
-import { useSelector } from "react-redux";
+import { BsTrash } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { deleteNote } from "./noteSlice";
 
 export function NoteCard() {
 
+    const { token } = useSelector(state => state.user);
     const { notes } = useSelector(state => state.notes);
+
+    const dispatch = useDispatch();
+
+    function deleteNoteHandler(token, noteId) {
+        dispatch(deleteNote({token, noteId}))
+    }
 
     return (
         <ul className="flex flex-wrap w-full">
@@ -13,62 +22,41 @@ export function NoteCard() {
                     key={note._id}
                     className={`${note.bgColor} w-full md:w-[47%] m-2`}
                 >
-                    <Link to={`note/${note._id}`}>
-                        <div
-                            className={`p-4 w-full`}
-                        >
-                            <div className="flex justify-between w-full mb-2">
-                                <div className="flex flex-col w-[90%]">
-                                    <h1 className={`${note.bgColor} text-2xl font-bold capitalize py-2 text-black`}>
-                                        {note.noteTitle}
-                                    </h1>
-
-                                    <p className="capitalize">
-                                        {note.noteBody}
-                                    </p>
-                                </div>
+                    <div
+                        className={`p-4 w-full`}
+                    >
+                        <div className="flex justify-between w-full mb-2">
+                            <div className="flex flex-col w-[90%]">
+                                <h1 className={`${note.bgColor} text-2xl font-bold capitalize py-2 text-black`}>
+                                    {note.noteTitle}
+                                </h1>
+                                
+                                <p className="capitalize">
+                                    {note.noteBody}
+                                </p>
                             </div>
-                    
-                            <div className="flex items-center justify-between">
-                                <div 
-                                    className="flex"
-                                    // onClick={(e) => setBgColor(e.target.dataset.color)}
-                                >
-                                    <div 
-                                        data-color="bg-l-red" 
-                                        className="w-6 h-6 rounded-full border border-black bg-l-red cursor-pointer"
-                                    >
-                                    </div>
+                        </div>
+                
+                        <div className="flex items-center justify-between">
+                        
+                        <BsTrash 
+                            size={24} 
+                            className="hover:text-red-700 cursor-pointer"
+                            onClick={() => deleteNoteHandler(token, note._id)}
+                        />
 
-                                    <div 
-                                        data-color="bg-white" 
-                                        className="w-6 h-6 ml-1 rounded-full border border-black bg-white cursor-pointer"
-                                    >
-                                    </div>
-
-                                    <div 
-                                        data-color="bg-b-blue" 
-                                        className="w-6 h-6 ml-1 cursor-pointer rounded-full border border-black bg-b-blue"
-                                    >
-                                </div>
-
-                                <div 
-                                    data-color="bg-l-yellow" 
-                                    className="w-6 h-6 ml-1 rounded-full border border-black bg-l-yellow cursor-pointer"
-                                >
-                                </div>
-
-                            </div>
-
+                        <Link to={`note/${note._id}`}>
                             <div className="text-2xl border border-black s-btn text-center cursor-pointer">
                                 Edit
                             </div>
-                        </div>
-                        </div>
-                    </Link>
-                </li>
-            ))}
-        </ul>
-    );
+                        </Link>
+
+                    </div>
+                    </div>
+                
+            </li>
+        ))}
+    </ul>
+);
 }
 
