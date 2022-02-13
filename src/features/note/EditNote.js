@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom"
-import { getNote, editNote } from "./noteSlice";
+import { editNote } from "./noteSlice";
 import { BsPinFill, BsPin } from "react-icons/bs";
 
 export function EditNote() {
 
     const { token } = useSelector(state => state.user);
-    const { note, status } = useSelector(state => state.notes);
+    const { notes, status } = useSelector(state => state.notes);
+
+    const { noteId } = useParams();
+
+    const note = notes.find(note => note._id === noteId )
 
     const [noteTitle, setNoteTitle] = useState(note?.noteTitle);
     const [noteBody, setNoteBody] = useState(note?.noteBody);
     const [isPinned, setIsPinned] = useState(note?.isPinned);
     const [bgColor, setBgColor] = useState(note?.bgColor);
-
-    console.log(noteTitle, noteBody, isPinned, bgColor);
-
-    console.log(note);
-
-    const {noteId} = useParams();
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -35,15 +33,12 @@ export function EditNote() {
 
     };
 
-    useEffect(() => {
-        dispatch(getNote({token, noteId}));
-    }, [dispatch, token, noteId]);
-
     return (
         <div className="custom-container flex flex-col items-center">
 
             <h1 className="mt-8 text-2xl font-bold">Edit Note</h1>
 
+            {note && 
             <div 
                 className={`${bgColor} rounded-lg flex flex-col md:w-1/2 my-8 justify-center items-center shadow-xl`}
             >
@@ -123,7 +118,7 @@ export function EditNote() {
                     </div>
                 </form>
             </div>
+            }
         </div>
     )
 }
-

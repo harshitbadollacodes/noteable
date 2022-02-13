@@ -37,19 +37,6 @@ export const addNote = createAsyncThunk(
     }
 );
 
-export const getNote = createAsyncThunk(
-    "note/getNote",
-    async ({token, noteId}) => {
-        const response = await axios.get(`${API}/notes/${noteId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        
-        return response.data;
-    }
-);
-
 export const editNote = createAsyncThunk(
     "note/editNote",
     async ({token, noteId, noteTitle, noteBody, isPinned, bgColor}) => {
@@ -74,7 +61,6 @@ export const noteSlice = createSlice({
     initialState: {
         status: "idle",
         notes: [],
-        note: null,
         error: ""
     },
     
@@ -105,11 +91,6 @@ export const noteSlice = createSlice({
 
         [getAllNotes.pending]: (state) => {
             state.status = "loading";
-        },
-
-        [getNote.fulfilled]: (state, action) => {
-            state.status = "fulfilled";
-            state.note = action.payload.note
         },
 
         [editNote.pending]: (state) => {
