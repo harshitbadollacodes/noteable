@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -18,20 +19,39 @@ export function EditNote() {
     const [noteBody, setNoteBody] = useState(note?.noteBody);
     const [isPinned, setIsPinned] = useState(note?.isPinned);
     const [bgColor, setBgColor] = useState(note?.bgColor);
+    const [imageURL, setImageURL] = useState(note?.imageURL);
     
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    async function uploadImageHandler(e) {
+        let image = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "kutumlde");
+
+        const {status, data: {url} } = await axios.post("https://api.cloudinary.com/v1_1/dwrcvgzi0/image/upload", formData);
+
+        if (status === 200) {
+            setImageURL(url);
+        };
+    };
+
     function editNoteFormHandler(e) {
         e.preventDefault();
 
-        dispatch(editNote({ token, noteId, noteTitle, noteBody, isPinned, bgColor }));
+        dispatch(editNote({ token, noteId, noteTitle, noteBody, isPinned, bgColor, imageURL }));
 
         if (status === "fulfilled") {
             navigate("/")
         }
 
     };
+
+    function removeImageHandler() {
+        
+    }
 
     return (
         <div className="custom-container flex flex-col items-center">
@@ -42,6 +62,14 @@ export function EditNote() {
             <div 
                 className={`${bgColor} rounded-lg flex flex-col md:w-1/2 my-8 justify-center items-center shadow-xl`}
             >
+                <form>
+                    <input 
+                        type="file" 
+                        className="custom-file-input my-2 cursor-pointer rounded-lg border border-d-blue p-2"
+                        onChange={(e) => uploadImageHandler(e)} 
+                    />
+                </form>
+
                 <form 
                     className={`p-4 w-full`}
                     onSubmit={(e) => editNoteFormHandler(e)}
@@ -58,6 +86,7 @@ export function EditNote() {
 
                             <input 
                                 type="text"
+                                required
                                 className={`${bgColor} py-2 text-black focus:outline-none`}
                                 placeholder="What do you want to note down?"
                                 value={noteBody}
@@ -112,7 +141,8 @@ export function EditNote() {
                         <input
                             type="submit"
                             value="Save"
-                            className="cursor-pointer p-btn"
+                            className={`cursor-pointer p-btn ${noteBody.length === 0 && "cursor-not-allowed"}`}
+                            disabled={noteBody.length === 0}
                         />
 
                     </div>
