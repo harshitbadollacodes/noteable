@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signUpUser } from "./userSlice";
-
+import { resetAuthStatus, signUpUser } from "./userSlice";
 
 export function SignupForm() {
 
@@ -12,7 +11,7 @@ export function SignupForm() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const { status, error } = useSelector(state => state.user);
+    const { isUserLoggedIn, status, error } = useSelector(state => state.user);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -20,8 +19,12 @@ export function SignupForm() {
     async function signUpHandler(e) {
         e.preventDefault();
         await dispatch(signUpUser({firstName, lastName, email, password}));
-        navigate("/");
     }
+
+    useEffect(() => {
+        dispatch(resetAuthStatus());
+        isUserLoggedIn && navigate("/");
+    }, [isUserLoggedIn, dispatch, navigate]);
 
     return (
         <div className="flex flex-col items-center lg:h-screen justify-center rounded-lg p-4">

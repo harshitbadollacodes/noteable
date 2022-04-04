@@ -14,7 +14,7 @@ export function Login() {
                 alt="notes"
                 className="lg:w-1/2 lg:h-screen"
             />
-            {token ? <Logout/> : <LoginForm/>}
+            { token ? <Logout/> : <LoginForm/> }
         </div>
 
     )

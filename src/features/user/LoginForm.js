@@ -1,16 +1,13 @@
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser, resetAuthStatus } from "./userSlice";
 
-
-
 export function LoginForm() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    
     const { isUserLoggedIn, status, error } = useSelector(state => state.user);
     
     const dispatch = useDispatch();
@@ -19,13 +16,17 @@ export function LoginForm() {
     async function loginHandler(e) {
         e.preventDefault();
         await dispatch(loginUser({email, password}));
-        navigate("/");
     };
+
+    function guestLoginHandler() {
+        setEmail("johndoe@gmail.com");
+        setPassword("testing");
+    }
 
     useEffect(() => {
         dispatch(resetAuthStatus());
         isUserLoggedIn && navigate("/");
-    }, [ isUserLoggedIn, navigate, dispatch]);
+    }, [ isUserLoggedIn, navigate, dispatch ]);
 
     return (
         <div className="flex flex-col items-center lg:h-[90vh] lg:w-1/2 justify-center rounded-lg p-4">
@@ -43,7 +44,7 @@ export function LoginForm() {
                 className="w-full md:w-[70%]"
                 onSubmit={(e) => loginHandler(e)}    
             >   
-                <div className="">
+                <div>
                     <label className="flex flex-col">
                         Email
                         <input 
@@ -83,8 +84,17 @@ export function LoginForm() {
                     value={status === "loading" ? "Logging in..." : "Login" }
                     className="cursor-pointer w-full mt-4 bg-blue-500 hover:bg-d-blue hover:text-white transition-colors duration-300 p-2 rounded" 
                 />
+
+                <button 
+                    className="cursor-pointer w-full mt-4 bg-blue-500 hover:bg-d-blue hover:text-white transition-colors duration-300 p-2 rounded"
+                    onClick={() => guestLoginHandler()}
+                >
+                    Login as Guest
+                </button>
+
             </form>
 
+                
         </div>
     );
 }
