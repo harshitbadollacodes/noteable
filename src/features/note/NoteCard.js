@@ -19,41 +19,36 @@ export function NoteCard({notes}) {
             {notes && notes.map(note => (
                 <li 
                     key={note._id}
-                    className={`${note.bgColor} w-full md:w-[47%] m-2`}
+                    className={`${note.bgColor} w-full md:w-[47%] m-2 flex`}
                 >
-                    <div
-                        className={`p-4 w-full`}
-                    >
-                        <div className="flex justify-between w-full mb-2">
-                            <div className="flex flex-col w-[90%]">
-                                <h1 className={`${note.bgColor} text-2xl font-bold capitalize py-2 text-black`}>
-                                    {note.noteTitle}
-                                </h1>
-                                
-                                <p className="capitalize">
-                                    {note.noteBody}
-                                </p>
-                            </div>
-                        </div>
-                
-                        <div className="flex items-center justify-between">
+                    <div className="p-4 flex flex-col w-full">
+                        <h1 className={`${note.bgColor} text-2xl font-bold capitalize py-2 text-black`}>
+                            {note.noteTitle ? note.noteTitle : "Untitled Note"}
+                        </h1>
+
+                        { note.imageURL && <img src={note.imageURL} alt={note.noteTitle}/> }
                         
-                        <BsTrash 
-                            size={24} 
-                            className="hover:text-red-700 cursor-pointer"
-                            onClick={() => deleteNoteHandler(token, note._id)}
-                        />
+                        <p className="grow capitalize">
+                            {note.noteBody}
+                        </p>
 
-                        <Link to={`note/${note._id}`}>
-                            <div className="text-2xl border border-black s-btn text-center cursor-pointer">
-                                Edit
-                            </div>
-                        </Link>
-
-                    </div>
-                    </div>
+                        <div className="flex items-center justify-between">
                 
-            </li>
+                            <BsTrash 
+                                size={24} 
+                                className="hover:text-red-700 cursor-pointer"
+                                onClick={() => deleteNoteHandler(token, note._id)}
+                            />
+
+                            <Link to={`note/${note._id}`}>
+                                <div className="text-2xl border border-black s-btn text-center cursor-pointer">
+                                    Edit
+                                </div>
+                            </Link>
+                        </div>
+
+                    </div>
+                </li>
         ))}
     </ul>
 );
