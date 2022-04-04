@@ -1,30 +1,40 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../constants/config";
 
 export const loginUser = createAsyncThunk(
     "user/loginUser",
-    async({email, password}) => {
-        console.log(email, password);
-        const response = await axios.post(`${API}/user/login`, {
-            email, 
-            password
-        });
-        return response.data
+    async({email, password},{rejectWithValue}) => {
+        try {
+            const response = await axios.post(`${API}/user/login`, {
+                email, 
+                password
+            });
+            console.log(response.data);
+            return response.data
+        } catch(error) {
+            console.log({error});
+            return rejectWithValue(error.response.data.message);
+        }
     }
 );
 
 export const signUpUser = createAsyncThunk(
     "user/signUpUser",
-    async({firstName, lastName,email, password}) => {
-        const response = await axios.post(`${API}/user/signup`, {
-            firstName, 
-            lastName,
-            email, 
-            password
-        });
-
-        return response.data;
+    async({firstName, lastName,email, password},{rejectWithValue}) => {
+        try {
+            const response = await axios.post(`${API}/user/signup`, {
+                firstName, 
+                lastName,
+                email, 
+                password
+            });
+    
+            return response.data;
+        } catch(error) {
+            console.log({error});
+            return rejectWithValue(error.response.data.message);
+        }
     }
 );
 
@@ -77,6 +87,9 @@ export const userSlice = createSlice({
         },
 
         [loginUser.fulfilled]: (state, action) => {
+            state.status = "tokenFetched";
+            console.log(state.status);
+            
             const { userId, firstName, lastName, token } = action.payload;
             localStorage.setItem("userId", JSON.stringify(userId));
             localStorage.setItem("token", JSON.stringify(token));
@@ -87,14 +100,13 @@ export const userSlice = createSlice({
             state.userId = userId;
             state.token = token;
             state.firstName = firstName;
-            state.lastName = lastName;
-            state.status = "tokenFetched";
+            
             state.isUserLoggedIn = true;
         },
 
         [loginUser.rejected]: (state, action) => {
             state.status = "error";
-            state.error = action.error.message;
+            state.error = action.payload;
         },
 
         [signUpUser.pending]: (state) => {
@@ -118,7 +130,7 @@ export const userSlice = createSlice({
 
         [signUpUser.rejected]: (state, action) => {
             state.status = "error";
-            state.error = action.error.message;
+            state.error = action.payload;
         },
 
     }
