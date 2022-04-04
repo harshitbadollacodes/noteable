@@ -17,5 +17,5 @@
 }
 
 .s-btn {
-    @apply text-black p-2 text-xl rounded-lg min-w-[100px] hover:bg-gray-200 transition delay-100
+    @apply text-black p-2 text-xl rounded-lg min-w-[100px] hover:bg-red-500 transition delay-100
 }
