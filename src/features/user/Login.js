@@ -1,5 +1,5 @@
 import { LoginForm } from "./LoginForm";
-import notes from "../../images/notes.jpg";
+import notes from "../../images/notes.webp";
 import { useSelector } from "react-redux";
 import { Logout } from "./Logout";
 
