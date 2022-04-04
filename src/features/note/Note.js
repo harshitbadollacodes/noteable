@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllNotes } from "./noteSlice";
@@ -14,6 +15,7 @@ export function Note() {
     const unpinnedNotes = notes.filter(note => !note.isPinned);
     
     const [form, setForm] = useState(false);
+    const [imageURL, setImageURL] = useState("");
 
     const [noteTitle, setNoteTitle] = useState("");
     const [noteBody, setNoteBody] = useState("");
@@ -21,6 +23,20 @@ export function Note() {
     const [bgColor, setBgColor] = useState("bg-l-yellow");
     
     const dispatch = useDispatch();
+
+    async function uploadImageHandler(e) {
+        let image = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "kutumlde");
+
+        const {status, data: {url} } = await axios.post("https://api.cloudinary.com/v1_1/dwrcvgzi0/image/upload", formData);
+
+        if (status === 200) {
+            setImageURL(url);
+        };
+    };
 
     function addNoteFormHandler() {
         
@@ -31,11 +47,11 @@ export function Note() {
         setIsPinned(false);
         setBgColor("bg-l-yellow");
 
-        dispatch(addNote({ token, noteTitle, noteBody, isPinned, bgColor }));
+        dispatch(addNote({ token, noteTitle, noteBody, isPinned, bgColor, imageURL }));
 
     };
 
-    function clearHandler() {
+    function cancelHandler() {
         setForm(false);
 
         setNoteTitle("");
@@ -64,6 +80,15 @@ export function Note() {
                 <div 
                     className={`${bgColor} rounded-lg flex flex-col md:w-1/2 my-8 justify-center items-center shadow-xl`}
                 >
+
+                <form>
+                    <input 
+                        type="file" 
+                        className="custom-file-input my-2 cursor-pointer rounded-lg border border-d-blue p-2"
+                        onChange={(e) => uploadImageHandler(e)} 
+                    />
+                </form>
+
                     <form 
                         className={`p-4 w-full`}
                         onSubmit={(e) => addNoteFormHandler(e)}
@@ -80,6 +105,7 @@ export function Note() {
 
                                 <input 
                                     type="text"
+                                    required
                                     className={`${bgColor} py-2 text-black focus:outline-none`}
                                     placeholder="What do you want to note down?"
                                     value={noteBody}
@@ -132,10 +158,10 @@ export function Note() {
                             </div>
 
                             <div 
-                                onClick={clearHandler}
-                                className="text-2xl s-btn text-center cursor-pointer"
+                                onClick={cancelHandler}
+                                className="text-2xl s-btn text-center cursor-pointer bg-red-400"
                             >
-                                Clear
+                                Cancel
                             </div>
 
                             <input
@@ -143,26 +169,20 @@ export function Note() {
                                 value="Add"
                                 className="cursor-pointer p-btn"
                             />
-
                         </div>
                     </form>
                 </div>
             }
 
-            <div className="w-full">
-                <h1 className="font-bold text-2xl">Pinned Notes</h1>
-                    <NoteCard notes={pinnedNotes} />
+            <div className="w-full min-h-[15vh] lg:min-h-[50vh]">
+                <h1 className="font-bold text-2xl">Pinned Notes <span>( {pinnedNotes.length} )</span></h1>
+                <NoteCard notes={pinnedNotes} />
             </div>
 
-            <div className="w-full">
-                <h1 className="font-bold text-2xl">Other Notes</h1>
+            <div className="w-full min-h-[50vh]">
+                <h1 className="font-bold text-2xl">Other Notes <span>( {unpinnedNotes.length} )</span></h1>
                 <NoteCard notes={unpinnedNotes}/>
             </div>
-
-            
-            
-            
-
 
         </div>
     );
