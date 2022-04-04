@@ -1,5 +1,5 @@
 import { SignupForm } from "./SignupForm";
-import notes from "../../images/notes.jpg";
+import notes from "../../images/notes.webp";
 
 export function Signup() {
 
